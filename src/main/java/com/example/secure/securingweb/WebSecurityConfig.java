@@ -11,8 +11,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity // Spring Security의 웹 보안 지원을 받으려면 필요
+@EnableWebSecurity // Spring Security의 웹 보안 지원을 받으려면 필
 public class WebSecurityConfig {
+
+
 
     /**
      * The SecurityFilterChain bean defines which URL paths should be secured and which should not.
@@ -22,7 +24,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) ->
-                requests.antMatchers("/", "/home").permitAll() // 인증이 필요없는 페이지 지정
+                requests.antMatchers("/", "/home").permitAll() // 인증이 필요없는 페이지 지정 , ("/경로/**") 이런식으로 하위경로 전체 지정도 가능
                         .anyRequest().authenticated()
         ).formLogin((form) -> form.loginPage("/login").permitAll()) //로그인, 로그아웃 페이지 지
                 .logout((logout) -> logout.permitAll());
@@ -41,7 +43,14 @@ public class WebSecurityConfig {
                         .password("password")
                         .roles("USER")
                         .build();
+        UserDetails admin = User.withDefaultPasswordEncoder()
+                .username("admin")
+                .password("password")
+                .roles("ADMIN", "USER")
+                .build();
 
-        return new InMemoryUserDetailsManager(user);
+        return new InMemoryUserDetailsManager(user, admin);
     }
+
+
 }
