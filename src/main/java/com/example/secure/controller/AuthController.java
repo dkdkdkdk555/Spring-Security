@@ -37,7 +37,7 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         /*
-            UsernamePasswordAuthenticationToken를 이용해서 Authentication 객체를 생성하려고 .authenticatte() 메소드가 실행될때
+            UsernamePasswordAuthenticationToken를 이용해서 Authentication 객체를 생성하려고 .authenticate() 메소드가 실행될때
            CustomUserDetailsService에 loadUserByUsername 메소드가 실행됨 ->  그 결과값으로 Authentication 객체가 생성됨
         * */
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

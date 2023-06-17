@@ -18,8 +18,4 @@ public class HelloController {
         return ResponseEntity.ok("hello");
     }
 
-    @PostConstruct
-    public void init(){
-//        User
-    }
 }
