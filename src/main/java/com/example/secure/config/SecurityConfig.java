@@ -1,13 +1,20 @@
 package com.example.secure.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration // 설정파일임
 @EnableWebSecurity // 활성화 : 스프링 시큐리티 필터가 스프링 필터체인에 등록됨
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Bean //  해당 메소드의 리턴되는 오브젝트를 IoC로 등록해줌
+    public BCryptPasswordEncoder encoderPwd(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -19,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll() // 다른요청은 권한 ok
                 .and()
                 .formLogin()
-                .loginPage("/login"); // 이제 권한이 필요한 페이지는 login페이지로 가짐
+                .loginPage("/loginForm"); // 이제 권한이 필요한 페이지는 login페이지로 가짐
 
     }
 }
