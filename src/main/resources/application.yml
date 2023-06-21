@@ -35,6 +35,12 @@ spring:
           google:
             client-id: 757699063028-lb8slrb5m7380in7ssud05hjeu5aggaq.apps.googleusercontent.com
             client-secret: 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
-            scope:
+            scope: # 받고자 하는 데이터
               - email
               - profile
+          facebook:
+            client-id: 744759020732838
+            client-secret: 4a5c0fb4c6173f1a3a0c9304da343c51
+            scope:
+              - email
+              - public_profile # 페이스북 엑세스토큰 문서에 있음

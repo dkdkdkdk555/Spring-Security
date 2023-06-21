@@ -1,6 +1,9 @@
 package com.example.secure.config.oauth;
 
 import com.example.secure.config.auth.PrincipalDetails;
+import com.example.secure.config.oauth.provider.FacebookUserInfo;
+import com.example.secure.config.oauth.provider.GoogleUserInfo;
+import com.example.secure.config.oauth.provider.OAuth2UserInfo;
 import com.example.secure.model.User;
 import com.example.secure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +34,21 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService { // �
         // userRequest 정보 -> loadUser함수 호출 -> 구글로부터 회원프로필 받아준다.
         System.out.println("getAttributes : " + oAuth2User.getAttributes());
 
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if("google".equals(userRequest.getClientRegistration().getRegistrationId())){
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if("facebook".equals(userRequest.getClientRegistration().getRegistrationId())){
+            System.out.println("페이스북 로그인 요청");
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        }
+
         // 구글 로그인 데이터 겟
-        String provider = userRequest.getClientRegistration().getClientId(); // google
-        String providerId = oAuth2User.getAttribute("sub"); // google id key
+        String provider = oAuth2UserInfo.getProvider(); // google
+        String providerId = oAuth2UserInfo.getProviderId(); // google id key
         String username = provider + "_" + providerId; // 유저네임 중복 방지
         String password = new BCryptPasswordEncoder().encode(providerId);
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
         // 회원가입 여부 검증
