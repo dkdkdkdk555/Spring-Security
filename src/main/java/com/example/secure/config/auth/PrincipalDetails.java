@@ -1,11 +1,14 @@
 package com.example.secure.config.auth;
 
 import com.example.secure.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * 시큐리티가 /login 주소요청이 오면 낚아채서 로그인을 진행시킴
@@ -17,12 +20,31 @@ import java.util.Collection;
  *
  * Security Session 여기에 세션정보 저장 => 저기 들어가는 객체는 Authentication => 저기 들어가는 유저정보 객체는 UserDetails(PrincipalDetails)
   */
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user;
+    private Map<String, Object> attributes; // 구글에서 넘겨주는 데이터
 
+    // 일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
+    }
+
+    // OAuth 로그인
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override // OAuth2User 오버라이드 메소드
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override // OAuth2User 오버라이드 메소드
+    public String getName() {
+        return null;
     }
 
     @Override // 해당 유저의 권한을 리턴
@@ -66,4 +88,5 @@ public class PrincipalDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

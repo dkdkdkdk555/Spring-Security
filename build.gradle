@@ -22,6 +22,9 @@ dependencies {
 	annotationProcessor('org.projectlombok:lombok')
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+	//Oauth2 추가
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 
 	/**
 	 * ou do that by configuring Spring Security in the application.

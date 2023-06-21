@@ -14,7 +14,10 @@ spring:
     username: ukha
     password: 1234
 
-#  mvc: --> WebMvcConfig ?? ???
+  main:
+    allow-bean-definition-overriding: true
+
+  #  mvc: --> WebMvcConfig ?? ???
 #    view:
 #      prefix: /templates/
 #      suffix: .mustache
@@ -24,3 +27,14 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 757699063028-lb8slrb5m7380in7ssud05hjeu5aggaq.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
