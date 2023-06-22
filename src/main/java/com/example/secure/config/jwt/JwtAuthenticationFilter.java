@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // /login 요청을 하면 로그인 시도를 위해서 실행되는 함수
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("JwtAuthenticationFilter : 로그인 시도중");
+        System.out.println("UsernamePasswordAuthenticationFilter :: JwtAuthenticationFilter()");
         // 1. id, pw 받아서
         try {
             // x-www-form-urlencoded 로 요청시
@@ -51,7 +51,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // json 으로 요청시
             ObjectMapper om = new ObjectMapper();
             User user = om.readValue(request.getInputStream(), User.class);
-            System.out.println(user);
             // 토큰 만들기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
             // PrincipalDetailsService의 loadUserByUsername() 이 실행된 후 정상이면 Authentication이 리턴됨
@@ -59,8 +58,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication = authenticationManager.authenticate(authenticationToken); // 매니져가 인증을해서 Authentication 객체를 만들어줌
 
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            System.out.println("ㅍㅍㅍ : " + principalDetails.getUser().getUsername()); // 이게 조회가 된다는건 로그인 됫다는뜻
-            System.out.println("---------------------------------");
+//            System.out.println("ㅍㅍㅍ " + principalDetails.getUser().getUsername()); // 이게 조회가 된다는건 로그인 됫다는뜻
+//            System.out.println("---------------------------------");
             // authentication 객체가 Security session 영역에 저장을 해야하고 그방법이 return
             return authentication;
         } catch (IOException e) {
@@ -71,7 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 3. PrincipalDetails 를 세션에 담고 => 세션에 값이 있어야 권한 관리가 된다. (권한관리 안할거면 세션에 안담아도 됨)
 
         // 4. JWT 토큰을 만들어서 응답해주면
-        System.out.println("================================");
+//        System.out.println("================================");
         return null;
     }
 
@@ -80,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        System.out.println("successfulAuthentication 실행됨 : 인증이 완료되었씁ㄴ다.");
+        System.out.println("UsernamePasswordAuthenticationFilter :: successfulAuthentication");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         // Hash암호방식
         String jwtToken = JWT.create()

@@ -29,6 +29,7 @@ public class RestApiController {
 
     @PostMapping("join")
     public String join (@RequestBody User user){
+        System.out.println("Controller :: join");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles("ROLE_USER");
         userRepository.save(user);
@@ -37,8 +38,8 @@ public class RestApiController {
 
     @GetMapping("/api/v1/user") // user, manager, admin 권한만 접근 가능
     public String user(Authentication authentication){
+        System.out.println("Controller :: /api/v1/user");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("authentication : " + principalDetails.getUser());
         return "user";
     }
     @GetMapping("/api/v1/manager") // manager, admin 권한만 가능
