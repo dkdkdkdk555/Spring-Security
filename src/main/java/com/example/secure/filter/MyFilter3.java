@@ -24,7 +24,6 @@ public class MyFilter3 implements Filter {
             System.out.println("POST 요청됨");
             String headerAuth = req.getHeader("Authorization");
             System.out.println(headerAuth);
-            System.out.println("필터1");
 
             if("cors".equals(headerAuth)){
                 chain.doFilter(req, res);
@@ -32,7 +31,8 @@ public class MyFilter3 implements Filter {
                 PrintWriter out = res.getWriter();
                 out.println("인증안됨");
             }
+        } else {
+            chain.doFilter(request, response); // 필터 체인에 등록
         }
-        chain.doFilter(request, response); // 필터 체인에 등록
     }
 }
