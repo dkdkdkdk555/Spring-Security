@@ -1,5 +1,6 @@
 package com.example.secure.config.jwt;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.secure.config.auth.PrincipalDetails;
 import com.example.secure.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
+
+import com.auth0.jwt.JWT;
 
 /**
  * 스프링 시큐리티에 UsernamePasswordAuthenticationFilter 가 있음
@@ -77,6 +81,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         System.out.println("successfulAuthentication 실행됨 : 인증이 완료되었씁ㄴ다.");
-        super.successfulAuthentication(request, response, chain, authResult);
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        // Hash암호방식
+        String jwtToken = JWT.create()
+                .withSubject("욱하토큰") // 토큰이름 (별의미없음)
+                .withExpiresAt(new Date(System.currentTimeMillis() + (60000)*10)) // 유효시간 (10분)
+                .withClaim("id", principalDetails.getUser().getId())
+                .withClaim("username", principalDetails.getUser().getUsername())
+                .sign(Algorithm.HMAC512("ukha")); // 내 서버만 아는 고유한 값이 있어야함
+
+        response.addHeader("Authorization", "Bearer " + jwtToken); // 헤더에 담겨서 클라이언트에 리턴
     }
 }
