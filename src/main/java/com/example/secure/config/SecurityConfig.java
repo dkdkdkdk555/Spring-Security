@@ -1,8 +1,10 @@
 package com.example.secure.config;
 
 import com.example.secure.config.jwt.JwtAuthenticationFilter;
+import com.example.secure.config.jwt.JwtAuthorizationFilter;
 import com.example.secure.filter.MyFilter1;
 import com.example.secure.filter.MyFilter3;
+import com.example.secure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
@@ -19,6 +21,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
+    private final UserRepository userRepository;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
@@ -29,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 폼로그인 안쓴다. --> /login 이거 자동으로 동작안함
                 .httpBasic().disable() // httpbasic 방식 안쓴다.
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // 로그인진행하는 필터기 때문에 AuthenticationManager 던져줘야함
-                // ( WebSecurityConfigureAdapter가 들고있음)
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

@@ -25,14 +25,16 @@ public class MyFilter3 implements Filter {
             String headerAuth = req.getHeader("Authorization");
             System.out.println(headerAuth);
 
-            if("cors".equals(headerAuth)){
-                chain.doFilter(req, res);
-            } else {
-                PrintWriter out = res.getWriter();
-                out.println("인증안됨");
-            }
+//            if("cors".equals(headerAuth)){
+//                chain.doFilter(req, res);
+//            } else {
+//                PrintWriter out = res.getWriter();
+//                out.println("인증안됨");
+//            }
         } else {
-            chain.doFilter(request, response); // 필터 체인에 등록
+//            chain.doFilter(request, response); // 필터 체인에 등록
         }
+
+        chain.doFilter(request, response);
     }
 }

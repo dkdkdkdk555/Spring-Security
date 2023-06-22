@@ -24,7 +24,7 @@ public class PrincipalDetails implements UserDetails { // Authentication 인증�
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         user.getRoleList().forEach( r -> {
-            authorities.add(() ->  r);
+            authorities.add(() -> r);
         });
         return authorities;
     }

@@ -85,11 +85,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Hash암호방식
         String jwtToken = JWT.create()
                 .withSubject("욱하토큰") // 토큰이름 (별의미없음)
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60000)*10)) // 유효시간 (10분)
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME)) // 유효시간
                 .withClaim("id", principalDetails.getUser().getId())
                 .withClaim("username", principalDetails.getUser().getUsername())
-                .sign(Algorithm.HMAC512("ukha")); // 내 서버만 아는 고유한 값이 있어야함
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET)); // 내 서버만 아는 고유한 값이 있어야함
 
-        response.addHeader("Authorization", "Bearer " + jwtToken); // 헤더에 담겨서 클라이언트에 리턴
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+ jwtToken); // 헤더에 담겨서 클라이언트에 리턴
     }
 }
